@@ -1,11 +1,10 @@
 "use client"
 
 import type React from "react"
-import { useState, useCallback } from "react"
-import { Button } from "@/components/ui/button"
+import { useState, useCallback, memo, useMemo } from "react"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
-import { Mail, CheckCircle, Sun, Moon, Instagram, Facebook, Linkedin } from "lucide-react"
+import { Mail, CheckCircle, Instagram, Facebook, Linkedin } from "lucide-react"
 import Image from "next/image"
 import { content, socialLinks } from "@/lib/content"
 import { getCardStyles, getFooterStyles, themeConfig } from "@/lib/theme"
@@ -29,28 +28,32 @@ type GSAPTween = {
 }
 
 interface MainContentProps {
-  isDark: boolean
-  setIsDark: (isDark: boolean) => void
   gsapRef: React.MutableRefObject<GSAPInstance | null>
   themeStyles: React.CSSProperties
 }
 
-export const MainContent: React.FC<MainContentProps> = ({
-  isDark,
-  setIsDark,
+const MainContentComponent: React.FC<MainContentProps> = ({
   gsapRef,
 }) => {
   const [email, setEmail] = useState("")
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Memoize description styles for light theme only
+  const descriptionStyles = useMemo(() => ({
+    color: themeConfig.colors.accent
+  }), [])
+
+  // Use light theme logo only
+  const logoSrc = useMemo(() => "/images/Asset 8.png", [])
+
+  const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault()
     if (email) {
       console.log("Newsletter signup:", email)
       setIsSubmitted(true)
       setEmail("")
     }
-  }
+  }, [email])
 
   const handleElementHover = useCallback((element: HTMLElement, isEntering: boolean) => {
     if (gsapRef.current) {
@@ -66,64 +69,29 @@ export const MainContent: React.FC<MainContentProps> = ({
 
   return (
     <>
-      {/* Theme Toggle Button */}
-      {/* <div className="absolute top-6 right-6 z-50">
-        <Button
-          onClick={() => setIsDark(!isDark)}
-          variant="outline"
-          size="icon"
-          className="w-12 h-12 rounded-full backdrop-blur-sm hover:scale-105 active:scale-95 transition-all duration-200"
-          style={{
-            border: `1px solid ${isDark ? themeConfig.colors.dark.border : themeConfig.colors.light.border}`,
-            backgroundColor: isDark ? "rgba(0, 0, 0, 0.9)" : "rgba(255, 255, 255, 0.9)",
-            willChange: "transform",
-            transform: "translateZ(0)",
-          }}
-        >
-          {isDark ? (
-            <Sun
-              className="w-5 h-5 transition-all duration-200 rotate-0 hover:rotate-90"
-              style={{ color: themeConfig.colors.white }}
-            />
-          ) : (
-            <Moon
-              className="w-5 h-5 transition-all duration-200 rotate-0 hover:rotate-12"
-              style={{ color: themeConfig.colors.accent }}
-            />
-          )}
-        </Button>
-      </div> */}
-
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center px-4 py-16 text-center relative z-10"
+      <main className="flex-1 flex flex-col items-center justify-center px-3 py-8 sm:px-4 sm:py-12 md:py-16 lg:py-20 text-center relative z-10 min-h-screen"
       style={{
         background: "url('/images/HOTELNA PATTERNS-01.jpg') no-repeat center center fixed",
         backgroundSize: "cover",
       }}>
         <div
-          className="mb-12 transform transition-transform duration-300 cursor-pointer"
+          className="mb-6 sm:mb-8 md:mb-12 transform transition-transform duration-300 cursor-pointer w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl"
           onMouseEnter={(e) => handleElementHover(e.currentTarget, true)}
           onMouseLeave={(e) => handleElementHover(e.currentTarget, false)}
         >
-          {/* <div className="w-32 h-32 mx-auto mb-8 flex items-center justify-center transition-all duration-300">
-            <Image
-              width={128}
-              height={128}
-              src={isDark ? "/images/hotelna-logo-dark.png" : "/images/hotelna-logo-light.png"}
-              alt={content.accessibility.logoAlt}
-              className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
-            />
-            </div> */}
-            <div className="w-100">
+            <div className="w-full px-4 sm:px-0">
             <Image
             width={300}
             height={100}
-            src={isDark ? "/images/hotelna-brand-dark.png" : "/images/Asset 8.png"}
+            src={logoSrc}
             alt={content.accessibility.logoAlt}
-            className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
+            className="w-full h-auto max-w-[200px] sm:max-w-[250px] md:max-w-[300px] lg:max-w-[350px] mx-auto object-contain hover:scale-105 transition-transform duration-300"
+            priority
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
             />
             </div>
-
         </div>
 
         {/* Heading */}
@@ -136,8 +104,8 @@ export const MainContent: React.FC<MainContentProps> = ({
 
         {/* Description */}
         <p
-          className="text-lg md:text-xl font-light mb-8 max-w-2xl transition-colors duration-300 font-sans"
-          style={{ color: isDark ? themeConfig.colors.secondary : themeConfig.colors.accent }}
+          className="text-base sm:text-lg md:text-xl lg:text-2xl font-light mb-6 sm:mb-8 max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-3xl px-4 sm:px-0 transition-colors duration-300 font-sans leading-relaxed"
+          style={descriptionStyles}
         >
           Under-construction
           {/* {content.brand.description} */}
@@ -300,13 +268,13 @@ export const MainContent: React.FC<MainContentProps> = ({
 
       {/* Footer */}
       <footer
-        className="py-8 px-4 transition-colors duration-300 relative z-10"
-        style={getFooterStyles(isDark)}
+        className="py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6 transition-colors duration-300 relative z-10"
+        style={getFooterStyles()}
       >
         <div className="max-w-4xl mx-auto text-center">
           <p
-            className="font-light text-sm transition-colors duration-300"
-            style={{ color: isDark ? themeConfig.colors.white : themeConfig.colors.accent }}
+            className="font-light text-xs sm:text-sm md:text-base transition-colors duration-300 px-2"
+            style={{ color: themeConfig.colors.accent }}
           >
             {content.footer.copyright}
           </p>
@@ -315,3 +283,5 @@ export const MainContent: React.FC<MainContentProps> = ({
     </>
   )
 }
+
+export const MainContent = memo(MainContentComponent)

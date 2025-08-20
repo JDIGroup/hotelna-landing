@@ -1,52 +1,58 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
-import { BackgroundEffects } from "@/components/background-effects"
-import { MainContent } from "@/components/main-content"
+import { useState, useEffect, useCallback, useMemo, memo } from "react"
+import dynamic from "next/dynamic"
 import { useAnimations } from "@/hooks/use-animations"
 import { getThemeStyles } from "@/lib/theme"
 
-export default function HotelnaLanding() {
-  const [isDark, setIsDark] = useState(false)
+// Lazy load heavy components
+const BackgroundEffects = dynamic(() => import("@/components/background-effects").then(mod => ({ default: mod.BackgroundEffects })), {
+  ssr: false,
+  loading: () => null
+})
+
+const MainContent = dynamic(() => import("@/components/main-content").then(mod => ({ default: mod.MainContent })), {
+  ssr: false,
+  loading: () => <div className="min-h-screen flex items-center justify-center">Loading...</div>
+})
+
+function HotelnaLanding() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [clickRipples, setClickRipples] = useState<Array<{ id: number; x: number; y: number }>>([])
 
   const { containerRef, particlesRef, gsapRef, handleClick } = useAnimations({
-    isDark,
     mousePosition,
-    setClickRipples,
+    setClickRipplesAction: setClickRipples,
   })
 
-  const themeStyles = getThemeStyles(isDark)
+  // Memoize theme styles to prevent recalculation (always light theme)
+  const themeStyles = useMemo(() => getThemeStyles(), [])
 
-  // Theme initialization
+  // Memoize background gradient to prevent recalculation (always light theme)
+  const backgroundStyle = useMemo(() => ({
+    ...themeStyles,
+    background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #ffffff 100%)',
+  }), [themeStyles])
+
+  // Apply light theme styles to document body
   useEffect(() => {
-    const savedTheme = localStorage.getItem("hotelna-theme")
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
-
-    if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
-      setIsDark(true)
-    } else {
-      setIsDark(false)
-    }
+    localStorage.setItem("hotelna-theme", "light")
+    document.body.style.backgroundColor = "#ffffff"
+    document.body.style.color = "#000000"
   }, [])
 
-  // Apply theme styles to document body
+  // Optimize mouse tracking with throttling and passive listeners
   useEffect(() => {
-    console.log("[v0] Theme changing to:", isDark ? "dark" : "light")
-    localStorage.setItem("hotelna-theme", isDark ? "dark" : "light")
+    let lastUpdate = 0
+    const throttleDelay = 16 // ~60fps
 
-    document.body.style.backgroundColor = isDark ? "#000000" : "#ffffff"
-    document.body.style.color = isDark ? "#ffffff" : "#000000"
-
-    console.log("[v0] Applied theme styles directly")
-  }, [isDark])
-
-  // Update mouse position for animations
-  useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
+      const now = Date.now()
+      if (now - lastUpdate >= throttleDelay) {
+        setMousePosition({ x: e.clientX, y: e.clientY })
+        lastUpdate = now
+      }
     }
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true })
@@ -56,28 +62,16 @@ export default function HotelnaLanding() {
   return (
     <div
       ref={containerRef}
-      style={{
-        ...themeStyles,
-        background: isDark
-          ? 'linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%)'
-          : 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #ffffff 100%)',
-      }}
-      className="min-h-screen flex flex-col relative overflow-hidden transition-all duration-500 cursor-crosshair"
+      style={backgroundStyle}
+      className="min-h-screen flex flex-col relative overflow-hidden transition-all duration-500 cursor-crosshair will-change-auto mobile-safe-area responsive-bg"
       onClick={handleClick}
     >
-      {/* <BackgroundEffects
-        isDark={isDark}
-        mousePosition={mousePosition}
-        particlesRef={particlesRef}
-        clickRipples={clickRipples}
-      /> */}
-
       <MainContent
-        isDark={isDark}
-        setIsDark={setIsDark}
         gsapRef={gsapRef}
         themeStyles={themeStyles}
       />
     </div>
   )
 }
+
+export default memo(HotelnaLanding)

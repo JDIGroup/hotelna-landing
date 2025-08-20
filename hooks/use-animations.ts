@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { useRef, useEffect, useCallback } from "react"
+import { throttle, rafThrottle } from "@/lib/performance"
 import {
   animationConfig,
   particleAnimations,
@@ -12,12 +13,11 @@ import {
 } from "@/lib/animations"
 
 interface UseAnimationsProps {
-  isDark: boolean
   mousePosition: { x: number; y: number }
-  setClickRipples: React.Dispatch<React.SetStateAction<Array<{ id: number; x: number; y: number }>>>
+  setClickRipplesAction: React.Dispatch<React.SetStateAction<Array<{ id: number; x: number; y: number }>>>
 }
 
-export const useAnimations = ({ isDark, mousePosition, setClickRipples }: UseAnimationsProps) => {
+export const useAnimations = ({ mousePosition, setClickRipplesAction }: UseAnimationsProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const particlesRef = useRef<HTMLDivElement[]>([])
   const gsapRef = useRef<any>(null)
@@ -184,11 +184,11 @@ export const useAnimations = ({ isDark, mousePosition, setClickRipples }: UseAni
     const y = e.clientY - rect.top
     const id = rippleIdRef.current++
 
-    setClickRipples((prev) => [...prev, { id, x, y }])
+    setClickRipplesAction((prev) => [...prev, { id, x, y }])
 
     // Remove ripple after animation
     setTimeout(() => {
-      setClickRipples((prev) => prev.filter((ripple) => ripple.id !== id))
+      setClickRipplesAction((prev) => prev.filter((ripple) => ripple.id !== id))
     }, 1000)
 
     // Particle burst effect
@@ -199,7 +199,7 @@ export const useAnimations = ({ isDark, mousePosition, setClickRipples }: UseAni
         }
       })
     }
-  }, [setClickRipples])
+  }, [setClickRipplesAction])
 
   // Mouse move event listener
   useEffect(() => {
