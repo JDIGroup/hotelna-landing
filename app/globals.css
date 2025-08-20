@@ -528,13 +528,16 @@
   animation: particle-burst 0.6s ease-out forwards;
 }
 
-/* Enhanced cursor styles for interactive experience */
+* {
+  cursor: url('/images/Asset 9.png') 8 8, auto;
+}
+
 .cursor-crosshair {
-  cursor: crosshair;
+  cursor: url('/images/Asset 9.png') 8 8, crosshair;
 }
 
 .cursor-crosshair:hover {
-  cursor: pointer;
+  cursor: url('/images/Asset 9.png') 8 8, pointer;
 }
 
 /* Added performance optimization classes for intense animations */
@@ -607,3 +610,5 @@
   transform: translateZ(0);
   backface-visibility: hidden;
 }
+
+

@@ -56,16 +56,21 @@ export default function HotelnaLanding() {
   return (
     <div
       ref={containerRef}
-      style={themeStyles}
+      style={{
+        ...themeStyles,
+        background: isDark
+          ? 'linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%)'
+          : 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #ffffff 100%)',
+      }}
       className="min-h-screen flex flex-col relative overflow-hidden transition-all duration-500 cursor-crosshair"
       onClick={handleClick}
     >
-      <BackgroundEffects
+      {/* <BackgroundEffects
         isDark={isDark}
         mousePosition={mousePosition}
         particlesRef={particlesRef}
         clickRipples={clickRipples}
-      />
+      /> */}
 
       <MainContent
         isDark={isDark}

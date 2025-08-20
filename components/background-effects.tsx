@@ -20,6 +20,57 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
 }) => {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Gold Pattern Background */}
+      <div
+        className="absolute inset-0 transition-opacity duration-500 pattern-shift"
+        style={{
+          backgroundImage: `
+            linear-gradient(0deg, transparent 24%, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.05) 26%, transparent 27%, transparent 74%, rgba(255,255,255,0.05) 75%, rgba(255,255,255,0.05) 76%, transparent 77%),
+            linear-gradient(90deg, transparent 24%, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.05) 26%, transparent 27%, transparent 74%, rgba(255,255,255,0.05) 75%, rgba(255,255,255,0.05) 76%, transparent 77%)
+          `,
+          backgroundSize: '60px 60px',
+          backgroundColor: isDark ? 'rgba(213, 177, 95, 0.08)' : 'rgba(213, 177, 95, 0.12)',
+          opacity: isDark ? 0.15 : 0.25,
+        }}
+      />
+
+      {/* Subtle H pattern overlay */}
+      <div
+        className="absolute inset-0 subtle-glow"
+        style={{
+          backgroundImage: `
+            repeating-linear-gradient(
+              0deg,
+              transparent,
+              transparent 20px,
+              rgba(213, 177, 95, 0.3) 20px,
+              rgba(213, 177, 95, 0.3) 22px,
+              transparent 22px,
+              transparent 38px,
+              rgba(213, 177, 95, 0.3) 38px,
+              rgba(213, 177, 95, 0.3) 40px,
+              transparent 40px,
+              transparent 60px
+            ),
+            repeating-linear-gradient(
+              90deg,
+              transparent,
+              transparent 15px,
+              rgba(213, 177, 95, 0.3) 15px,
+              rgba(213, 177, 95, 0.3) 17px,
+              transparent 17px,
+              transparent 43px,
+              rgba(213, 177, 95, 0.3) 43px,
+              rgba(213, 177, 95, 0.3) 45px,
+              transparent 45px,
+              transparent 60px
+            )
+          `,
+          backgroundSize: '60px 60px',
+          opacity: 0.1,
+        }}
+      />
+
       {/* Enhanced gradient blob */}
       <div
         className="gradient-blob absolute w-[512px] h-[512px] blur-3xl transition-opacity duration-500"

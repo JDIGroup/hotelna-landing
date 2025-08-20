@@ -67,7 +67,7 @@ export const MainContent: React.FC<MainContentProps> = ({
   return (
     <>
       {/* Theme Toggle Button */}
-      <div className="absolute top-6 right-6 z-50">
+      {/* <div className="absolute top-6 right-6 z-50">
         <Button
           onClick={() => setIsDark(!isDark)}
           variant="outline"
@@ -92,10 +92,14 @@ export const MainContent: React.FC<MainContentProps> = ({
             />
           )}
         </Button>
-      </div>
+      </div> */}
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center px-4 py-16 text-center relative z-10">
+      <main className="flex-1 flex flex-col items-center justify-center px-4 py-16 text-center relative z-10"
+      style={{
+        background: "url('/images/HOTELNA PATTERNS-01.jpg') no-repeat center center fixed",
+        backgroundSize: "cover",
+      }}>
         <div
           className="mb-12 transform transition-transform duration-300 cursor-pointer"
           onMouseEnter={(e) => handleElementHover(e.currentTarget, true)}
@@ -114,7 +118,7 @@ export const MainContent: React.FC<MainContentProps> = ({
             <Image
             width={300}
             height={100}
-            src={isDark ? "/images/hotelna-brand-dark.png" : "/images/hotelna-brand-light.png"}
+            src={isDark ? "/images/hotelna-brand-dark.png" : "/images/Asset 8.png"}
             alt={content.accessibility.logoAlt}
             className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
             />
@@ -135,12 +139,13 @@ export const MainContent: React.FC<MainContentProps> = ({
           className="text-lg md:text-xl font-light mb-8 max-w-2xl transition-colors duration-300 font-sans"
           style={{ color: isDark ? themeConfig.colors.secondary : themeConfig.colors.accent }}
         >
-          {content.brand.description}
+          Under-construction
+          {/* {content.brand.description} */}
           {/* {content.brand.subtitle} */}
         </p>
 
         {/* Animated Coming Soon */}
-        <div className="mb-8 relative h-20 md:h-24 lg:h-28 flex items-center justify-center">
+        {/* <div className="mb-8 relative h-20 md:h-24 lg:h-28 flex items-center justify-center">
           <h1
             className="text-4xl md:text-5xl lg:text-6xl font-bold relative overflow-visible leading-none"
             style={{
@@ -150,9 +155,9 @@ export const MainContent: React.FC<MainContentProps> = ({
                 : '0 0 20px rgba(47, 71, 99, 0.3)',
               height: 'fit-content',
             }}
-          >
+          > */}
             {/* Animated text with staggered letters */}
-            <span className="inline-block">
+            {/* <span className="inline-block">
               {content.brand.comingsoon?.split('').map((char, index) => (
                 <span
                   key={index}
@@ -167,20 +172,20 @@ export const MainContent: React.FC<MainContentProps> = ({
                   {char === ' ' ? '\u00A0' : char}
                 </span>
               ))}
-            </span>
+            </span> */}
 
             {/* Glowing underline effect */}
-            <div
+            {/* <div
               className="absolute bottom-0 left-0 h-1 animate-pulse"
               style={{
                 width: '100%',
                 background: `linear-gradient(90deg, transparent, ${themeConfig.colors.primary}, transparent)`,
                 animation: 'shimmer 3s ease-in-out infinite',
               }}
-            />
+            /> */}
 
             {/* Sparkle effects */}
-            <div className="absolute -top-2 -right-2 w-3 h-3 animate-ping">
+            {/* <div className="absolute -top-2 -right-2 w-3 h-3 animate-ping">
               <div
                 className="w-full h-full rounded-full opacity-75"
                 style={{ backgroundColor: themeConfig.colors.primary }}
@@ -205,10 +210,10 @@ export const MainContent: React.FC<MainContentProps> = ({
               />
             </div>
           </h1>
-        </div>
+        </div> */}
 
         {/* Newsletter Card */}
-        <Card
+        {/* <Card
           className="w-full max-w-md mb-12 shadow-lg hover:shadow-xl transition-all duration-300"
           style={getCardStyles(isDark)}
         >
@@ -269,10 +274,10 @@ export const MainContent: React.FC<MainContentProps> = ({
               </div>
             )}
           </CardContent>
-        </Card>
+        </Card> */}
 
         {/* Social Links */}
-        <div className="flex gap-6 mb-8">
+        {/* <div className="flex gap-6 mb-8">
           {socialLinks.map((link, index) => {
             const IconComponent = iconComponents[link.icon as keyof typeof iconComponents]
             return (
@@ -290,7 +295,7 @@ export const MainContent: React.FC<MainContentProps> = ({
               </a>
             )
           })}
-        </div>
+        </div> */}
       </main>
 
       {/* Footer */}

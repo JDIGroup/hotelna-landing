@@ -65,6 +65,24 @@
   }
 }
 
+@keyframes pattern-shift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 60px 60px;
+  }
+}
+
+@keyframes subtle-glow {
+  0%, 100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
 /* Apply animation classes */
 .animate-spin-slow {
   animation: animate-spin-slow 8s linear infinite;
@@ -84,4 +102,12 @@
 
 .wave-bounce {
   animation: wave-bounce 2s ease-in-out infinite;
+}
+
+.pattern-shift {
+  animation: pattern-shift 20s linear infinite;
+}
+
+.subtle-glow {
+  animation: subtle-glow 4s ease-in-out infinite;
 }
